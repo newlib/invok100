@@ -9,10 +9,10 @@ class Invoking_model extends CI_Model
         $com = $this->input->post('com');//快递公司
         $numb = $this->input->post('number');//订单号
 
-        $key = 321313213;
-        $url = "http://api.kuaidi100.com/api?id=".$key."&com=".$com."&nu=".$numb."&show=0&muti=0&order=desc";
+        $key = 321313213;//快递100接口key值
+        $url = "http://api.kuaidi100.com/api?id=".$key."&com=".$com."&nu=".$numb."&show=0&muti=0&order=desc";//接口地址
 
-            $kd = curl_init();
+            $kd = curl_init();//请求初始化
             curl_setopt($kd,CURLOPT_URL,$url);
             curl_setopt($kd,CURLOPT_RETURNTRANSFER,1);
             curl_setopt($kd,CURLOPT_HEADER,0);
@@ -21,5 +21,27 @@ class Invoking_model extends CI_Model
 
             curl_close($kd);//关闭请求
             return $output;
+    }
+
+    public function save_ip($data_ip){
+
+        $data = array(
+            'ip' => $data_ip['ip'],
+            'time'=>$data_ip['ip_time'],
+        );
+        $bool=$this->db->insert('user_info',$data);
+        return $bool;
+    }
+
+    public function select_ip()
+    {
+        $shows = $this->db->query('SELECT ip,COUNT(*) time FROM user_info GROUP BY ip');
+        if($shows == true){
+            $rs = $shows->result();
+            return $rs;
+        }else{
+            $error = $this->db->error();
+            return $error;
+        }
     }
 }
