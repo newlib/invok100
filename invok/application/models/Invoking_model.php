@@ -23,25 +23,25 @@ class Invoking_model extends CI_Model
             return $output;
     }
 
-    public function save_ip($data_ip){
+    public function save_ip($data_ip) {
 
         $data = array(
             'ip' => $data_ip['ip'],
             'time'=>$data_ip['ip_time'],
         );
-        $bool=$this->db->insert('user_info',$data);
+        $bool = $this->db->insert('user_info',$data);
+
         return $bool;
     }
 
-    public function select_ip()
-    {
-        $shows = $this->db->query('SELECT ip,COUNT(*) time FROM user_info GROUP BY ip');
-        if($shows == true){
-            $rs = $shows->result();
-            return $rs;
-        }else{
-            $error = $this->db->error();
-            return $error;
-        }
+    public function select_ip() {
+        //$shows = $this->db->query('SELECT ip,COUNT(*) time FROM user_info GROUP BY ip');//查询构造函数
+        $this->db->select('ip, COUNT(*) time');
+        $this->db->from('user_info');
+        $this->db->group_by('ip');
+
+        $query = $this->db->get();
+        $shows = $query->result();
+        return $shows;
     }
 }
